@@ -298,10 +298,8 @@
       // 初始化/重开一局
       function initGame() {
         // 以网格中心对齐，避免 0.5 格导致无法碰撞
-        const startX =
-          Math.floor(width / (2 * blockSize)) * blockSize;
-        const startY =
-          Math.floor(height / (2 * blockSize)) * blockSize;
+        const startX = Math.floor(width / (2 * blockSize)) * blockSize;
+        const startY = Math.floor(height / (2 * blockSize)) * blockSize;
 
         snake = [
           { x: startX, y: startY },
