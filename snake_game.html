@@ -23,44 +23,6 @@
         overflow: hidden;
       }
 
-      /* 横屏模式下的布局调整 */
-      @media (orientation: landscape) and (min-width: 768px) {
-        body {
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          gap: 20px;
-          position: relative;
-        }
-
-        h1 {
-          position: absolute;
-          top: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          margin: 0;
-        }
-
-        .game-container {
-          flex: 0 0 auto;
-          margin-top: 50px;
-        }
-
-        .controls-hint {
-          position: absolute;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          margin: 0;
-        }
-
-        .touch-controls {
-          margin-top: 0;
-          position: relative;
-          flex-shrink: 0;
-        }
-      }
-
       h1 {
         margin-top: 0;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -172,22 +134,6 @@
         text-align: center;
       }
 
-      /* 竖屏模式下，将按键提示固定在底部 */
-      @media (orientation: portrait) {
-        body {
-          position: relative;
-        }
-
-        .controls-hint {
-          position: fixed;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          margin: 0;
-          z-index: 5;
-        }
-      }
-
       .key {
         display: inline-block;
         padding: 5px 8px;
@@ -201,143 +147,33 @@
       .touch-controls {
         margin-top: 20px;
         display: grid;
-        grid-template-columns: repeat(3, 90px);
-        grid-template-rows: repeat(2, 90px);
-        gap: 15px;
+        grid-template-columns: repeat(3, 60px);
+        grid-template-rows: repeat(2, 60px);
+        gap: 10px;
         justify-content: center;
         align-items: center;
-        padding: 10px;
       }
 
       .control-btn {
-        width: 90px;
-        height: 90px;
-        background: linear-gradient(
-          135deg,
-          rgba(46, 204, 113, 0.8),
-          rgba(39, 174, 96, 0.8)
-        );
-        border: 3px solid rgba(255, 255, 255, 0.5);
-        border-radius: 20px;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
         color: white;
+        font-size: 24px;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
-        transition: all 0.2s ease;
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3),
-          inset 0 2px 5px rgba(255, 255, 255, 0.2);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .control-btn::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.2),
-          transparent
-        );
-        opacity: 0;
-        transition: opacity 0.2s ease;
-      }
-
-      .control-btn:hover::before {
-        opacity: 1;
+        transition: background 0.1s, transform 0.1s;
       }
 
       .control-btn:active {
-        background: linear-gradient(
-          135deg,
-          rgba(39, 174, 96, 0.9),
-          rgba(46, 204, 113, 0.9)
-        );
-        transform: scale(0.92) translateY(2px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4),
-          inset 0 2px 5px rgba(0, 0, 0, 0.2);
-      }
-
-      /* 为不同方向的按钮添加不同颜色 */
-      .control-btn.up {
-        background: linear-gradient(
-          135deg,
-          rgba(52, 152, 219, 0.8),
-          rgba(41, 128, 185, 0.8)
-        );
-      }
-      .control-btn.up:active {
-        background: linear-gradient(
-          135deg,
-          rgba(41, 128, 185, 0.9),
-          rgba(52, 152, 219, 0.9)
-        );
-      }
-
-      .control-btn.down {
-        background: linear-gradient(
-          135deg,
-          rgba(155, 89, 182, 0.8),
-          rgba(142, 68, 173, 0.8)
-        );
-      }
-      .control-btn.down:active {
-        background: linear-gradient(
-          135deg,
-          rgba(142, 68, 173, 0.9),
-          rgba(155, 89, 182, 0.9)
-        );
-      }
-
-      .control-btn.left {
-        background: linear-gradient(
-          135deg,
-          rgba(241, 196, 15, 0.8),
-          rgba(243, 156, 18, 0.8)
-        );
-      }
-      .control-btn.left:active {
-        background: linear-gradient(
-          135deg,
-          rgba(243, 156, 18, 0.9),
-          rgba(241, 196, 15, 0.9)
-        );
-      }
-
-      .control-btn.right {
-        background: linear-gradient(
-          135deg,
-          rgba(231, 76, 60, 0.8),
-          rgba(192, 57, 43, 0.8)
-        );
-      }
-      .control-btn.right:active {
-        background: linear-gradient(
-          135deg,
-          rgba(192, 57, 43, 0.9),
-          rgba(231, 76, 60, 0.9)
-        );
-      }
-
-      /* 箭头图标样式 */
-      .arrow-icon {
-        font-size: 42px;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5),
-          0 0 10px rgba(255, 255, 255, 0.3);
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        transition: transform 0.2s ease;
-        display: block;
-        line-height: 1;
-      }
-
-      .control-btn:active .arrow-icon {
-        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0.95);
       }
 
       .control-btn.up {
@@ -395,25 +231,25 @@
         class="control-btn up"
         onpointerdown="handleInput('UP'); event.preventDefault()"
       >
-        <span class="arrow-icon">▲</span>
+        ▲
       </div>
       <div
         class="control-btn left"
         onpointerdown="handleInput('LEFT'); event.preventDefault()"
       >
-        <span class="arrow-icon">◀</span>
+        ◀
       </div>
       <div
         class="control-btn down"
         onpointerdown="handleInput('DOWN'); event.preventDefault()"
       >
-        <span class="arrow-icon">▼</span>
+        ▼
       </div>
       <div
         class="control-btn right"
         onpointerdown="handleInput('RIGHT'); event.preventDefault()"
       >
-        <span class="arrow-icon">▶</span>
+        ▶
       </div>
     </div>
 
