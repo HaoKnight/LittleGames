@@ -172,19 +172,89 @@
         text-align: center;
       }
 
-      /* 竖屏模式下，将按键提示固定在底部 */
+      /* 竖屏模式下，优化布局避免重叠 */
       @media (orientation: portrait) {
         body {
           position: relative;
+          min-height: 100vh;
+          padding-bottom: 20px;
+          justify-content: flex-start; /* 从顶部开始排列 */
+          padding-top: 10px;
         }
 
+        h1 {
+          order: -1;
+          margin-bottom: 5px;
+          font-size: 20px;
+        }
+
+        .game-container {
+          order: 0;
+          margin-bottom: 10px;
+        }
+
+        /* 方向按键：显示在提示文字上方 */
+        .touch-controls {
+          order: 1;
+          margin-bottom: 15px; /* 与提示文字之间的间距 */
+          margin-top: 10px;
+        }
+
+        /* 提示文字：显示在方向按键下方 */
         .controls-hint {
-          position: fixed;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          margin: 0;
+          order: 2;
+          position: relative;
+          margin-top: 0;
+          margin-bottom: 20px;
           z-index: 5;
+          background: rgba(0, 0, 0, 0.5);
+          padding: 8px 15px;
+          border-radius: 8px;
+          backdrop-filter: blur(5px);
+          font-size: 9px;
+          width: fit-content;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        /* 在小屏幕手机上进一步调整 */
+        @media (max-height: 800px) {
+          h1 {
+            font-size: 18px;
+            margin-bottom: 3px;
+          }
+
+          .game-container {
+            margin-bottom: 8px;
+          }
+
+          .touch-controls {
+            margin-bottom: 12px;
+            margin-top: 8px;
+          }
+
+          .controls-hint {
+            font-size: 8px;
+            padding: 6px 12px;
+            margin-top: 0;
+            margin-bottom: 15px;
+          }
+        }
+
+        /* 在更小的屏幕上进一步压缩 */
+        @media (max-height: 700px) {
+          .touch-controls {
+            transform: scale(0.9); /* 稍微缩小方向按键 */
+            margin-bottom: 10px;
+            margin-top: 5px;
+          }
+
+          .controls-hint {
+            font-size: 7px;
+            padding: 5px 10px;
+            margin-top: 0;
+            margin-bottom: 15px;
+          }
         }
       }
 
