@@ -1,7 +1,7 @@
 # 📖 LittleGames - 帮助文档
 
 <div style="font-size: 1.3em;">
-🔧 这是一个自制小游戏的目录...</div>
+<img src="https://raw.githubusercontent.com/HaoKnight/Document/main/My-Icon/game.svg" alt="游戏图标" width="24" height="24" style="vertical-align: middle;"> 这是一个自制小游戏的目录...</div>
 
 ## 🎮 游戏列表
 
