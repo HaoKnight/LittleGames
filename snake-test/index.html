@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!-- HTML5文档类型声明 -->
+<html lang="zh-CN">
+  <!-- HTML根元素，设置语言为简体中文 -->
+  <head>
+    <!-- 文档头部 -->
+    <meta charset="UTF-8" />
+    <!-- 字符编码为UTF-8 -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!-- 设置视口宽度、初始缩放、最大缩放和禁止用户缩放 -->
+
+    <title>贪吃蛇游戏 by Knight</title>
+    <!-- 页面标题 -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- 引入外部CSS样式文件 -->
+  </head>
+  <!-- 头部结束 -->
+  <body>
+    <!-- 文档主体 -->
+    <h1>SNAKE GAME</h1>
+    <!-- 一级标题，显示游戏名称 -->
+
+    <div class="game-container">
+      <!-- 游戏容器div -->
+      <div id="score-board">
+        <!-- 分数面板div -->
+        <span>SCORE: <span id="score">0</span></span>
+        <!-- 当前分数显示，初始值为0 -->
+        <span>BEST: <span id="highScore">0</span></span>
+        <!-- 最高分显示，初始值为0 -->
+      </div>
+      <!-- 分数面板结束 -->
+      <canvas id="gameCanvas"></canvas>
+      <!-- 游戏画布，用于绘制游戏画面 -->
+
+      <div id="startOverlay">
+        <!-- 开始游戏覆盖层 -->
+        <h2>Are You Ready?</h2>
+        <!-- 二级标题，询问是否准备好 -->
+        <p>Click to start the game</p>
+        <!-- 段落，提示点击开始游戏 -->
+        <button onclick="START()">START</button>
+        <!-- 开始按钮，点击时调用START函数 -->
+      </div>
+      <!-- 开始覆盖层结束 -->
+
+      <div id="message">
+        <!-- 游戏结束消息框 -->
+        <h2 id="msgText">GAME OVER</h2>
+        <!-- 二级标题，显示游戏结束 -->
+        <p>SCORE: <span id="finalScore">0</span></p>
+        <!-- 段落，显示最终分数 -->
+        <button onclick="resetGame()">RETRY</button>
+        <!-- 重试按钮，点击时调用resetGame函数 -->
+      </div>
+      <!-- 消息框结束 -->
+    </div>
+    <!-- 游戏容器结束 -->
+
+    <div class="controls-hint">
+      <!-- 控制提示div -->
+      <div class="hint-text">
+        Use <span class="key">W</span><span class="key">A</span
+        ><span class="key">S</span><span class="key">D</span>
+        or
+        <span class="key">Arrows</span> to move
+      </div>
+      <!-- 或方向键来移动 -->
+
+      <div class="settings-bar-inline">
+        <label class="toggle-switch small">
+          <input
+            type="checkbox"
+            id="toggleControls"
+            checked
+            onchange="toggleControls()"
+          />
+          <span class="slider round"></span>
+        </label>
+        <span class="setting-label">Show Controls</span>
+      </div>
+    </div>
+    <!-- 控制提示结束 -->
+
+    <div class="touch-controls">
+      <!-- 触摸控制div -->
+      <div
+        class="control-btn up"
+        onpointerdown="handleInput('UP'); event.preventDefault()"
+      >
+        <!-- 指针按下事件，调用handleInput函数并阻止默认行为 -->
+        <span class="arrow-icon">▲</span>
+        <!-- 向上箭头图标 -->
+      </div>
+      <!-- 向上按钮结束 -->
+      <div
+        class="control-btn left"
+        onpointerdown="handleInput('LEFT'); event.preventDefault()"
+      >
+        <span class="arrow-icon">◀</span>
+        <!-- 向左箭头图标 -->
+      </div>
+      <!-- 向左按钮结束 -->
+      <div
+        class="control-btn down"
+        onpointerdown="handleInput('DOWN'); event.preventDefault()"
+      >
+        <span class="arrow-icon">▼</span>
+        <!-- 向下箭头图标 -->
+      </div>
+      <!-- 向下按钮结束 -->
+      <div
+        class="control-btn right"
+        onpointerdown="handleInput('RIGHT'); event.preventDefault()"
+      >
+        <span class="arrow-icon">▶</span>
+        <!-- 向右箭头图标 -->
+      </div>
+      <!-- 向右按钮结束 -->
+    </div>
+    <!-- 触摸控制结束 -->
+
+    <script src="game.js"></script>
+    <!-- 引入外部JavaScript游戏逻辑文件 -->
+  </body>
+  <!-- 主体结束 -->
+</html>
+<!-- HTML文档结束 -->

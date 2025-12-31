@@ -24,6 +24,7 @@
       }
 
       /* 横屏模式下的布局调整 */
+      /* 当屏幕较宽时（如PC或横屏平板），改为左右布局，游戏区居中，控件在侧边 */
       @media (orientation: landscape) and (min-width: 768px) {
         body {
           flex-direction: row;
@@ -173,6 +174,7 @@
       }
 
       /* 竖屏模式下，优化布局避免重叠 */
+      /* 针对手机竖屏，调整元素顺序（order），确保游戏区和控制区合理分布 */
       @media (orientation: portrait) {
         body {
           position: relative;
@@ -502,6 +504,7 @@
       let width, height;
 
       // 按窗口尺寸动态调整画布（保持网格对齐）
+      // 核心逻辑：计算可用宽高，确保是 blockSize 的整数倍，保证网格完整
       function resizeCanvas() {
         // 预留上下控件空间，得到可用区域
         let availableWidth = window.innerWidth - 30;
@@ -564,6 +567,7 @@
       highScoreElement.innerText = highScore;
 
       // 初始化/重开一局
+      // 重置游戏状态，计算蛇的初始位置（屏幕中心），并启动游戏循环
       function initGame() {
         // 以网格中心对齐，避免 0.5 格导致无法碰撞
         const startX = Math.floor(width / (2 * blockSize)) * blockSize;
@@ -586,6 +590,7 @@
       }
 
       // 随机生成食物，避免落在蛇身上
+      // 如果生成的坐标与蛇身重叠，则递归调用重新生成
       function createFood() {
         food = {
           x: Math.floor(Math.random() * (width / blockSize)) * blockSize,
@@ -649,6 +654,7 @@
       }
 
       // 主绘制函数
+      // 每一帧清空画布，重新绘制背景、食物和蛇的所有部分
       function draw() {
         // Clear screen
         ctx.fillStyle = COLORS.background;
@@ -733,11 +739,13 @@
       }
 
       // 更新蛇位置与碰撞处理
+      // 核心游戏逻辑：移动蛇头，检测碰撞（墙壁/自身），处理吃食物逻辑
       function update() {
         if (isGameOver) return;
 
         direction = nextDirection;
 
+        // 计算新蛇头的位置
         const head = { x: snake[0].x, y: snake[0].y };
 
         if (direction === "RIGHT") head.x += blockSize;
@@ -745,13 +753,13 @@
         else if (direction === "UP") head.y -= blockSize;
         else if (direction === "DOWN") head.y += blockSize;
 
-        // 边界碰撞
+        // 边界碰撞检测：超出画布范围则游戏结束
         if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height) {
           gameOver();
           return;
         }
 
-        // 身体碰撞
+        // 身体碰撞检测：蛇头碰到身体任意部位则游戏结束
         for (let part of snake) {
           if (head.x === part.x && head.y === part.y) {
             gameOver();
@@ -759,23 +767,26 @@
           }
         }
 
+        // 将新蛇头加入数组头部
         snake.unshift(head);
 
-        // 吃到食物
+        // 吃到食物逻辑
         if (head.x === food.x && head.y === food.y) {
           score++;
           scoreElement.innerText = score;
+          // 更新最高分
           if (score > highScore) {
             highScore = score;
             localStorage.setItem("snakeHighScore", highScore);
             highScoreElement.innerText = highScore;
           }
           createFood();
-          // Increase speed slightly
+          // 难度提升：每吃一个食物，速度略微加快
           if (gameSpeed > 50) gameSpeed -= 1;
           clearInterval(gameInterval);
           gameInterval = setInterval(gameLoop, gameSpeed);
         } else {
+          // 未吃到食物，移除蛇尾，保持长度不变（移动效果）
           snake.pop();
         }
       }
@@ -812,6 +823,7 @@
       }
 
       // 方向输入（含防反向立即撞死）
+      // 只有当新方向不与当前方向相反时才生效（例如当前向右，不能直接向左）
       function handleInput(newDir) {
         if (newDir === "UP" && direction !== "DOWN") nextDirection = "UP";
         else if (newDir === "DOWN" && direction !== "UP")

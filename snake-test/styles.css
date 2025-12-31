@@ -1,0 +1,571 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"); /* 导入Google字体Press Start 2P */
+
+body {
+  /* 设置body元素样式 */
+  display: flex; /* 使用弹性布局 */
+  flex-direction: column; /* 垂直方向排列子元素 */
+  align-items: center; /* 水平居中对齐 */
+  justify-content: center; /* 垂直居中对齐 */
+  height: 100vh; /* 高度为视口高度的100% */
+  margin: 0; /* 外边距为0 */
+  background: linear-gradient(
+    135deg,
+    #1a2a6c,
+    #b21f1f,
+    #fdbb2d
+  ); /* 设置渐变背景色 */
+  font-family: "Press Start 2P", cursive; /* Retro font */ /* 设置字体为Press Start 2P，复古风格 */
+  color: white; /* 文字颜色为白色 */
+  overflow: hidden; /* 隐藏溢出内容 */
+}
+
+/* 横屏模式下的布局调整 */ /* 横屏模式媒体查询 */
+@media (orientation: landscape) and (min-width: 768px) {
+  /* 当屏幕为横屏且宽度大于等于768px时 */
+  body {
+    /* 设置body样式 */
+    flex-direction: row; /* 水平方向排列 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    gap: 20px; /* 子元素间距20px */
+    position: relative; /* 相对定位 */
+  }
+
+  h1 {
+    /* 设置标题样式 */
+    position: absolute; /* 绝对定位 */
+    top: 10px; /* 距离顶部10px */
+    left: 50%; /* 距离左边50% */
+    transform: translateX(-50%); /* 水平居中 */
+    margin: 0; /* 外边距为0 */
+  }
+
+  .game-container {
+    /* 游戏容器样式 */
+    flex: 0 0 auto; /* 不伸缩，不收缩，自动宽度 */
+    margin-top: 0; /* 上边距0 */
+  }
+
+  .controls-hint {
+    /* 控制提示样式 */
+    position: absolute; /* 绝对定位 */
+    bottom: 10px; /* 距离底部10px */
+    left: 50%; /* 距离左边50% */
+    transform: translateX(-50%); /* 水平居中 */
+    margin: 0; /* 外边距为0 */
+  }
+
+  .touch-controls {
+    /* 触摸控制样式 */
+    margin-top: 0; /* 上边距为0 */
+    position: relative; /* 相对定位 */
+    flex-shrink: 0; /* 不收缩 */
+  }
+}
+
+h1 {
+  /* 一级标题样式 */
+  margin-top: 0; /* 上边距为0 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 文字阴影效果 */
+  font-size: 24px; /* 字体大小24px */
+  margin-bottom: 10px; /* 下边距10px */
+}
+
+.game-container {
+  /* 游戏容器样式 */
+  position: relative; /* 相对定位 */
+  padding: 10px; /* 内边距10px */
+  background: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+  border-radius: 15px; /* 圆角15px */
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* 阴影效果 */
+  backdrop-filter: blur(5px); /* 背景模糊5px */
+  max-width: 100%; /* 最大宽度100% */
+  box-sizing: border-box; /* 盒模型包含边框和内边距 */
+}
+
+canvas {
+  /* 画布样式 */
+  border-radius: 10px; /* 圆角10px */
+  background-color: #222; /* 背景色为深灰色 */
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); /* 内阴影效果 */
+  display: block; /* 块级显示 */
+  max-width: 100%; /* 最大宽度100% */
+  height: auto; /* 高度自动 */
+}
+
+#score-board {
+  /* 分数面板样式 */
+  display: flex; /* 弹性布局 */
+  justify-content: space-between; /* 两端对齐 */
+  width: 100%; /* 宽度100% */
+  margin-bottom: 10px; /* 下边距10px */
+  font-size: 16px; /* 字体大小16px */
+}
+
+#message {
+  /* 消息提示框样式 */
+  position: absolute; /* 绝对定位 */
+  top: 50%; /* 距离顶部50% */
+  left: 50%; /* 距离左边50% */
+  transform: translate(-50%, -50%); /* 居中定位 */
+  background: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+  color: #333; /* 文字颜色深灰色 */
+  padding: 30px; /* 内边距30px */
+  border-radius: 15px; /* 圆角15px */
+  text-align: center; /* 文字居中 */
+  display: none; /* 默认隐藏 */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* 阴影效果 */
+  min-width: 200px; /* 最小宽度200px */
+  z-index: 10; /* 层级10 */
+}
+
+/* 开始提示浮层，与游戏结束样式一致，默认显示 */ /* 开始覆盖层样式 */
+#startOverlay {
+  /* 开始覆盖层样式 */
+  position: absolute; /* 绝对定位 */
+  top: 50%; /* 距离顶部50% */
+  left: 50%; /* 距离左边50% */
+  transform: translate(-50%, -50%); /* 居中定位 */
+  background: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+  color: #333333; /* 文字颜色深灰色 */
+  padding: 30px; /* 内边距30px */
+  border-radius: 15px; /* 圆角15px */
+  text-align: center; /* 文字居中 */
+  display: flex; /* 弹性布局 */
+  flex-direction: column; /* 垂直方向排列 */
+  align-items: center; /* 水平居中 */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* 阴影效果 */
+  min-width: 200px; /* 最小宽度200px */
+  z-index: 10; /* 层级10 */
+}
+
+/* 仅调整"开始游戏"按钮字号，不影响其他按钮 */ /* 开始覆盖层内按钮样式 */
+#startOverlay button {
+  /* 开始覆盖层内的按钮样式 */
+  font-size: 15px; /* 字体大小15px */
+}
+
+#message h2 {
+  /* 消息框内的二级标题样式 */
+  margin-top: 0; /* 上边距为0 */
+  color: #e74c3c; /* 文字颜色红色 */
+  font-size: 24px; /* 字体大小24px */
+}
+
+button {
+  /* 按钮通用样式 */
+  padding: 15px 30px; /* 内边距上下15px，左右30px */
+  font-size: 16px; /* 字体大小16px */
+  cursor: pointer; /* 鼠标指针为手型 */
+  background: linear-gradient(to bottom, #2ecc71, #27ae60); /* 绿色渐变背景 */
+  color: white; /* 文字颜色白色 */
+  border: none; /* 无边框 */
+  border-radius: 50px; /* 圆角50px，完全圆形 */
+  margin-top: 20px; /* 上边距20px */
+  font-family: "Press Start 2P", cursive; /* 字体为Press Start 2P */
+  box-shadow: 0 4px 0 #219150; /* 阴影效果，模拟3D按钮 */
+  transition: transform 0.1s, box-shadow 0.1s; /* 过渡动画 */
+}
+
+button:active {
+  /* 按钮按下时的样式 */
+  transform: translateY(4px); /* 向下移动4px */
+  box-shadow: 0 0 0 #219150; /* 移除阴影 */
+}
+
+button:hover {
+  /* 按钮悬停时的样式 */
+  filter: brightness(1.1); /* 亮度增加10% */
+}
+
+.controls-hint {
+  /* 控制提示样式 */
+  margin-top: 15px; /* 上边距15px */
+  font-size: 10px; /* 字体大小10px */
+  opacity: 0.8; /* 透明度80% */
+  text-align: center; /* 文字居中 */
+}
+
+/* 竖屏模式下，优化布局避免重叠 */ /* 竖屏模式媒体查询 */
+@media (orientation: portrait) {
+  /* 当屏幕为竖屏时 */
+  body {
+    /* 设置body样式 */
+    position: relative; /* 相对定位 */
+    min-height: 100vh; /* 最小高度为视口高度 */
+    padding-bottom: 20px; /* 下内边距20px */
+    justify-content: flex-start; /* 从顶部开始排列 */ /* 顶部对齐 */
+    padding-top: 10px; /* 上内边距10px */
+  }
+
+  h1 {
+    /* 标题样式 */
+    order: -1; /* 显示顺序为-1，排在最前 */
+    margin-bottom: 5px; /* 下边距5px */
+    font-size: 20px; /* 字体大小20px */
+  }
+
+  .game-container {
+    /* 游戏容器样式 */
+    order: 0; /* 显示顺序为0 */
+    margin-bottom: 2px; /* 下边距2px */
+  }
+
+  /* 方向按键：显示在提示文字上方 */ /* 触摸控制样式 */
+  .touch-controls {
+    /* 触摸控制样式 */
+    order: 1; /* 显示顺序为1 */
+    margin-bottom: 15px; /* 与提示文字之间的间距 */ /* 下边距15px */
+    margin-top: 2px; /* 上边距2px */
+  }
+
+  /* 提示文字：显示在方向按键下方 */ /* 控制提示样式 */
+  .controls-hint {
+    /* 控制提示样式 */
+    order: 2; /* 显示顺序为2 */
+    position: relative; /* 相对定位 */
+    margin-top: 0; /* 上边距为0 */
+    margin-bottom: 20px; /* 下边距20px */
+    z-index: 5; /* 层级5 */
+    background: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+    padding: 8px 15px; /* 内边距上下8px，左右15px */
+    border-radius: 8px; /* 圆角8px */
+    backdrop-filter: blur(5px); /* 背景模糊5px */
+    font-size: 9px; /* 字体大小9px */
+    width: fit-content; /* 宽度适应内容 */
+    margin-left: auto; /* 左边距自动 */
+    margin-right: auto; /* 右边距自动 */
+  }
+
+  /* 在小屏幕手机上进一步调整 */ /* 小屏幕媒体查询 */
+  @media (max-height: 800px) {
+    /* 当高度小于等于800px时 */
+    h1 {
+      /* 标题样式 */
+      font-size: 18px; /* 字体大小18px */
+      margin-bottom: 3px; /* 下边距3px */
+    }
+
+    .game-container {
+      /* 游戏容器样式 */
+      margin-bottom: 2px; /* 下边距2px */
+    }
+
+    .touch-controls {
+      /* 触摸控制样式 */
+      margin-bottom: 12px; /* 下边距12px */
+      margin-top: 2px; /* 上边距2px */
+    }
+
+    .controls-hint {
+      /* 控制提示样式 */
+      font-size: 8px; /* 字体大小8px */
+      padding: 6px 12px; /* 内边距上下6px，左右12px */
+      margin-top: 0; /* 上边距为0 */
+      margin-bottom: 15px; /* 下边距15px */
+    }
+  }
+
+  /* 在更小的屏幕上进一步压缩 */ /* 更小屏幕媒体查询 */
+  @media (max-height: 700px) {
+    /* 当高度小于等于700px时 */
+    .touch-controls {
+      /* 触摸控制样式 */
+      transform: scale(0.9); /* 稍微缩小方向按键 */ /* 缩放90% */
+      margin-bottom: 10px; /* 下边距10px */
+      margin-top: 0px; /* 上边距0px */
+    }
+
+    .controls-hint {
+      /* 控制提示样式 */
+      font-size: 7px; /* 字体大小7px */
+      padding: 5px 10px; /* 内边距上下5px，左右10px */
+      margin-top: 0; /* 上边距为0 */
+      margin-bottom: 15px; /* 下边距15px */
+    }
+  }
+}
+
+.key {
+  /* 键盘按键样式 */
+  display: inline-block; /* 行内块级显示 */
+  padding: 5px 8px; /* 内边距上下5px，左右8px */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* 半透明白色边框 */
+  border-radius: 4px; /* 圆角4px */
+  margin: 0 2px; /* 左右外边距2px */
+  background: rgba(255, 255, 255, 0.1); /* 半透明白色背景 */
+}
+
+/* Touch Controls */ /* 触摸控制样式 */
+.touch-controls {
+  /* 触摸控制容器样式 */
+  margin-top: 20px; /* 上边距20px */
+  display: grid; /* 网格布局 */
+  grid-template-columns: repeat(3, 90px); /* 3列，每列90px */
+  grid-template-rows: repeat(2, 90px); /* 2行，每行90px */
+  gap: 15px; /* 网格间距15px */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  padding: 10px; /* 内边距10px */
+}
+
+.control-btn {
+  /* 控制按钮样式 */
+  width: 90px; /* 宽度90px */
+  height: 90px; /* 高度90px */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(46, 204, 113, 0.8),
+    /* 起始颜色，半透明绿色 */ rgba(39, 174, 96, 0.8)
+      /* 结束颜色，半透明深绿色 */
+  );
+  border: 3px solid rgba(255, 255, 255, 0.5); /* 3px半透明白色边框 */
+  border-radius: 20px; /* 圆角20px */
+  color: white; /* 文字颜色白色 */
+  display: flex; /* 弹性布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  cursor: pointer; /* 鼠标指针为手型 */
+  user-select: none; /* 禁止选择文本 */
+  -webkit-tap-highlight-color: transparent; /* 移除点击高亮 */
+  transition: all 0.2s ease; /* 所有属性过渡0.2秒 */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3),
+    /* 外阴影 */ inset 0 2px 5px rgba(255, 255, 255, 0.2); /* 内阴影 */
+  position: relative; /* 相对定位 */
+  overflow: hidden; /* 隐藏溢出内容 */
+}
+
+.control-btn::before {
+  /* 控制按钮伪元素 */
+  content: ""; /* 空内容 */
+  position: absolute; /* 绝对定位 */
+  top: 0; /* 距离顶部0 */
+  left: 0; /* 距离左边0 */
+  right: 0; /* 距离右边0 */
+  bottom: 0; /* 距离底部0 */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  ); /* 渐变背景 */
+  opacity: 0; /* 透明度0，默认隐藏 */
+  transition: opacity 0.2s ease; /* 透明度过渡0.2秒 */
+}
+
+.control-btn:hover::before {
+  /* 悬停时显示伪元素 */
+  opacity: 1; /* 透明度100% */
+}
+
+.control-btn:active {
+  /* 按钮按下时的样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(39, 174, 96, 0.9),
+    /* 起始颜色 */ rgba(46, 204, 113, 0.9) /* 结束颜色 */
+  );
+  transform: scale(0.92) translateY(2px); /* 缩放92%并向下移动2px */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+}
+
+/* 为不同方向的按钮添加不同颜色 */ /* 向上按钮样式 */
+.control-btn.up {
+  /* 向上按钮样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(52, 152, 219, 0.8),
+    /* 起始颜色，半透明蓝色 */ rgba(41, 128, 185, 0.8)
+      /* 结束颜色，半透明深蓝色 */
+  );
+}
+.control-btn.up:active {
+  /* 向上按钮按下时的样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(41, 128, 185, 0.9),
+    /* 起始颜色 */ rgba(52, 152, 219, 0.9) /* 结束颜色 */
+  );
+}
+
+.control-btn.down {
+  /* 向下按钮样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(155, 89, 182, 0.8),
+    /* 起始颜色，半透明紫色 */ rgba(142, 68, 173, 0.8)
+      /* 结束颜色，半透明深紫色 */
+  );
+}
+.control-btn.down:active {
+  /* 向下按钮按下时的样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(142, 68, 173, 0.9),
+    /* 起始颜色 */ rgba(155, 89, 182, 0.9) /* 结束颜色 */
+  );
+}
+
+.control-btn.left {
+  /* 向左按钮样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(241, 196, 15, 0.8),
+    /* 起始颜色，半透明黄色 */ rgba(243, 156, 18, 0.8)
+      /* 结束颜色，半透明橙色 */
+  );
+}
+.control-btn.left:active {
+  /* 向左按钮按下时的样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(243, 156, 18, 0.9),
+    /* 起始颜色 */ rgba(241, 196, 15, 0.9) /* 结束颜色 */
+  );
+}
+
+.control-btn.right {
+  /* 向右按钮样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(231, 76, 60, 0.8),
+    /* 起始颜色，半透明红色 */ rgba(192, 57, 43, 0.8)
+      /* 结束颜色，半透明深红色 */
+  );
+}
+.control-btn.right:active {
+  /* 向右按钮按下时的样式 */
+  background: linear-gradient(
+    /* 渐变背景 */ 135deg,
+    /* 135度角 */ rgba(192, 57, 43, 0.9),
+    /* 起始颜色 */ rgba(231, 76, 60, 0.9) /* 结束颜色 */
+  );
+}
+
+/* 箭头图标样式 */ /* 箭头图标样式 */
+.arrow-icon {
+  /* 箭头图标样式 */
+  font-size: 42px; /* 字体大小42px */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.3); /* 文字阴影效果 */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* 投影滤镜 */
+  transition: transform 0.2s ease; /* 变换过渡0.2秒 */
+  display: block; /* 块级显示 */
+  line-height: 1; /* 行高为1 */
+}
+
+.control-btn:active .arrow-icon {
+  /* 按钮按下时箭头图标样式 */
+  transform: scale(0.9); /* 缩放90% */
+}
+
+.control-btn.up {
+  /* 向上按钮网格位置 */
+  grid-column: 2; /* 网格列位置2 */
+  grid-row: 1; /* 网格行位置1 */
+}
+.control-btn.left {
+  /* 向左按钮网格位置 */
+  grid-column: 1; /* 网格列位置1 */
+  grid-row: 2; /* 网格行位置2 */
+}
+.control-btn.down {
+  /* 向下按钮网格位置 */
+  grid-column: 2; /* 网格列位置2 */
+  grid-row: 2; /* 网格行位置2 */
+}
+.control-btn.right {
+  /* 向右按钮网格位置 */
+  grid-column: 3; /* 网格列位置3 */
+  grid-row: 2; /* 网格行位置2 */
+}
+
+/* Hide controls on larger screens if desired, but user asked for them */ /* 在大屏幕上隐藏控制的注释（已禁用） */
+/* @media (min-width: 768px) { .touch-controls { display: none; } } */ /* 大屏幕隐藏触摸控制的代码（已注释） */
+
+/* Settings Bar */
+.settings-bar-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 15px;
+  padding-left: 15px;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.setting-label {
+  font-size: 12px;
+  color: #ccc;
+  white-space: nowrap;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.toggle-switch.small {
+  width: 34px;
+  height: 18px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-switch.small .slider:before {
+  height: 14px;
+  width: 14px;
+}
+
+input:checked + .slider {
+  background-color: #2ecc71;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.toggle-switch.small input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+/* Hide controls when class is present */
+body.controls-hidden .touch-controls {
+  display: none !important;
+}
+
+.controls-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
