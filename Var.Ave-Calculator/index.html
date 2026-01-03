@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>样本方差均值计算器</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 50px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        h3 {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-top: -15px;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+        input[type="number"]:focus {
+            border-color: #4a90e2;
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        #result {
+            margin-top: 30px;
+            display: none; /* 默认隐藏，计算后显示 */
+        }
+        #result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        .result-summary {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+        .result-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        .card {
+            background: white;
+            padding: 15px 10px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .card h4 {
+            margin: 0 0 8px 0;
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            font-weight: normal;
+        }
+        .card .num {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .card.primary .num { color: #4a90e2; }
+        .card.accent .num { color: #e67e22; }
+        
+        .section-title {
+            font-size: 1rem;
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+            border-left: 4px solid #4a90e2;
+            padding-left: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title small {
+            font-weight: normal;
+            color: #95a5a6;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        #valuesContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            animation: slideDown 0.3s ease;
+            width: calc((100% - 24px) / 3);
+        }
+        .input-group input {
+            margin-bottom: 0;
+        }
+        .input-group label {
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            body {
+                padding-top: 0;
+                align-items: flex-start;
+            }
+            .container {
+                padding: 15px;
+                width: 100%;
+                max-width: none;
+                border-radius: 0;
+                box-shadow: none;
+                box-sizing: border-box;
+                min-height: 100vh;
+            }
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            .input-group {
+                width: calc((100% - 20px) / 3);
+            }
+            #valuesContainer {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>样本均值x̄方差s²计算器</h2>
+        <h3>作者: H-Knight</h3>
+        
+        <div class="section-title">1. 设置样本数量 <small>至少输入2个</small></div>
+        <input type="number" id="nInput" min="2" placeholder="例如：5">
+        
+        <div id="step2" style="display:none">
+            <div class="section-title">2. 输入样本数值</div>
+            <div id="valuesContainer"></div>
+            <button onclick="calculate()">开始计算</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // 根据输入的n生成对应的数值输入框
+        document.getElementById('nInput').addEventListener('input', function() {
+            const n = parseInt(this.value);
+            const container = document.getElementById('valuesContainer');
+            const step2 = document.getElementById('step2');
+            
+            container.innerHTML = ''; // 清空原有输入框
+            
+            if (n >= 2) {
+                step2.style.display = 'block';
+                for (let i = 1; i <= n; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'input-group';
+                    div.innerHTML = `<label>样本 ${i}</label>
+                                     <input type="number" class="valueInput" placeholder="数值">`;
+                    container.appendChild(div);
+                }
+            } else {
+                step2.style.display = 'none';
+            }
+        });
+
+        // 计算样本均值和样本方差
+        function calculate() {
+            const n = parseInt(document.getElementById('nInput').value);
+            const valueInputs = document.querySelectorAll('.valueInput');
+            const values = [];
+            
+            // 收集输入的样本值
+            for (let input of valueInputs) {
+                const val = parseFloat(input.value);
+                if (isNaN(val)) {
+                    alert('请填写所有样本值！');
+                    return;
+                }
+                values.push(val);
+            }
+
+            if (values.length === 0) {
+                alert('请输入样本数量并填写数值！');
+                return;
+            }
+
+            // 计算样本均值
+            const mean = values.reduce((sum, val) => sum + val, 0) / n;
+
+            // 计算样本方差（修正后，分母n-1）
+            const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / (n - 1);
+            
+            // 新增：计算样本标准差（修正样本方差开根号）
+            const stdDev = Math.sqrt(variance);
+
+            // 显示结果（新增样本标准差行）
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'show';
+            resultDiv.innerHTML = `
+                <div class="section-title">3. 计算结果</div>
+                <div class="result-summary">
+                    <strong>样本数据 (${n}个):</strong><br>
+                    ${values.join(', ')}
+                </div>
+                <div class="result-cards">
+                    <div class="card primary">
+                        <h4>样本均值x̄</h4>
+                        <div class="num">${mean.toFixed(4)}</div>
+                    </div>
+                    <div class="card accent">
+                        <h4>样本方差s²</h4>
+                        <div class="num">${variance.toFixed(4)}</div>
+                    </div>
+                    <div class="card">
+                        <h4>样本标准差s</h4>
+                        <div class="num">${stdDev.toFixed(4)}</div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
