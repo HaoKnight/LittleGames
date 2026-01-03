@@ -81,15 +81,6 @@
         button:active {
             transform: scale(0.98);
         }
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        .button-group button {
-            margin-top: 0;
-            flex: 1;
-        }
         #result {
             margin-top: 30px;
             display: none; /* 默认隐藏，计算后显示 */
@@ -226,33 +217,19 @@
         <div id="step2" style="display:none">
             <div class="section-title">2. 输入样本数值</div>
             <div id="valuesContainer"></div>
-            <div class="button-group">
-                <button id="resetBtn" onclick="resetCalculator()" style="display:none; background-color: #95a5a6;">重新输入</button>
-                <button id="calcBtn" onclick="calculate()">开始计算</button>
-            </div>
+            <button onclick="calculate()">开始计算</button>
         </div>
         
         <div id="result"></div>
     </div>
 
     <script>
-        let currentPrecision = 4;
-        let inputsChanged = true;
-
         // 根据输入的n生成对应的数值输入框
         document.getElementById('nInput').addEventListener('input', function() {
             const n = parseInt(this.value);
             const container = document.getElementById('valuesContainer');
             const step2 = document.getElementById('step2');
             
-            // 重置结果和按钮状态
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('result').className = '';
-            document.getElementById('calcBtn').style.display = 'block';
-            document.getElementById('resetBtn').style.display = 'none';
-            
-            inputsChanged = true; // 重置输入状态
-
             container.innerHTML = ''; // 清空原有输入框
             
             if (n >= 2) {
@@ -268,11 +245,6 @@
                 // 自动跳转逻辑
                 const inputs = container.querySelectorAll('.valueInput');
                 inputs.forEach((input, index) => {
-                    // 监听输入变化
-                    input.addEventListener('input', () => {
-                        inputsChanged = true;
-                    });
-
                     input.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault();
@@ -321,14 +293,6 @@
                 return;
             }
 
-            // 确定精度
-            if (inputsChanged) {
-                currentPrecision = 4;
-                inputsChanged = false;
-            } else {
-                currentPrecision++;
-            }
-
             // 计算样本均值
             const mean = values.reduce((sum, val) => sum + val, 0) / n;
 
@@ -340,7 +304,6 @@
 
             // 显示结果（新增样本标准差行）
             const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block'; // 确保清除可能存在的 display: none
             resultDiv.className = 'show';
             resultDiv.innerHTML = `
                 <div class="section-title">3. 计算结果</div>
@@ -351,39 +314,18 @@
                 <div class="result-cards">
                     <div class="card primary">
                         <h4>样本均值x̄</h4>
-                        <div class="num">${mean.toFixed(currentPrecision)}</div>
+                        <div class="num">${mean.toFixed(4)}</div>
                     </div>
                     <div class="card accent">
                         <h4>样本方差s²</h4>
-                        <div class="num">${variance.toFixed(currentPrecision)}</div>
+                        <div class="num">${variance.toFixed(4)}</div>
                     </div>
                     <div class="card">
                         <h4>样本标准差s</h4>
-                        <div class="num">${stdDev.toFixed(currentPrecision)}</div>
+                        <div class="num">${stdDev.toFixed(4)}</div>
                     </div>
                 </div>
             `;
-            
-            // 显示重新输入按钮，不隐藏开始计算按钮
-            // document.getElementById('calcBtn').style.display = 'none'; // 保持显示
-            document.getElementById('resetBtn').style.display = 'block';
-        }
-
-        function resetCalculator() {
-            document.getElementById('nInput').value = '';
-            document.getElementById('valuesContainer').innerHTML = '';
-            document.getElementById('step2').style.display = 'none';
-            
-            inputsChanged = true; // 重置输入状态
-            currentPrecision = 4; // 重置精度
-
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '';
-            resultDiv.className = '';
-            resultDiv.style.display = 'none';
-            
-            // document.getElementById('calcBtn').style.display = 'block'; // 始终显示
-            document.getElementById('resetBtn').style.display = 'none';
         }
     </script>
 </body>
