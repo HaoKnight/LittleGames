@@ -241,8 +241,34 @@
                                      <input type="number" class="valueInput" placeholder="数值">`;
                     container.appendChild(div);
                 }
+
+                // 自动跳转逻辑
+                const inputs = container.querySelectorAll('.valueInput');
+                inputs.forEach((input, index) => {
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (index < inputs.length - 1) {
+                                inputs[index + 1].focus();
+                            } else {
+                                calculate();
+                            }
+                        }
+                    });
+                });
             } else {
                 step2.style.display = 'none';
+            }
+        });
+
+        // 样本数量输入框回车跳转
+        document.getElementById('nInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const firstInput = document.querySelector('.valueInput');
+                if (firstInput) {
+                    e.preventDefault();
+                    firstInput.focus();
+                }
             }
         });
 
