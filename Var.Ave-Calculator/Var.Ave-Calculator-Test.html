@@ -270,7 +270,7 @@
 
     <script>
         // 全局变量
-        let currentPrecision = 2; // 默认小数精度
+        let currentPrecision = 4; // 默认小数精度
         let inputsChanged = true; // 标记输入是否发生变化
 
         // 监听样本数量输入框的变化
@@ -361,7 +361,7 @@
 
             // 确定显示精度：如果输入改变了重置为2，否则增加精度
             if (inputsChanged) {
-                currentPrecision = 2;
+                currentPrecision = 4;
                 inputsChanged = false;
             } else {
                 currentPrecision++;
@@ -414,7 +414,7 @@
             document.getElementById('step2').style.display = 'none';
             
             inputsChanged = true; // 重置输入状态
-            currentPrecision = 2; // 重置精度
+            currentPrecision = 4; // 重置精度
 
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = '';
