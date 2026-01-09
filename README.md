@@ -2,6 +2,4 @@
 
 ## 🎮 游戏列表
 
-<span style="font-size: 1.2em; font-weight: normal;">
-
 1. Snake🐍：贪吃蛇小游戏 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; [[点击进入]](https://haoknight.github.io/LittleGames/Snake/) &nbsp;&nbsp;&nbsp; - &nbsp; [[测试版]](https://haoknight.github.io/LittleGames/snake-test)
